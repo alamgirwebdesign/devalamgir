@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alamgir Hossain — Fullstack Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080C10;
+      --surface: #0E1318;
+      --border: #1C2530;
+      --accent: #00E5A0;
+      --accent2: #0066FF;
+      --text: #E8EDF2;
+      --muted: #5A6A7A;
+      --card: #111820;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Cursor */
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      width: 40px; height: 40px;
+      border: 1px solid rgba(0,229,160,0.4);
+      border-radius: 50%;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.15s ease;
+    }
+
+    /* Noise Overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 60px;
+      background: rgba(8,12,16,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      background: var(--accent);
+      color: #000;
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover { background: #00ffb3; transform: translateY(-1px); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 60px 80px;
+      position: relative;
+      overflow: hidden;
+      gap: 60px;
+    }
+
+    /* Animated BG grid */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,229,160,0.08) 0%, transparent 70%);
+      top: 50%; left: 30%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,229,160,0.08);
+      border: 1px solid rgba(0,229,160,0.2);
+      color: var(--accent);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.5); }
+    }
+
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(48px, 6vw, 80px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -2px;
+      color: var(--text);
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .hero-name .line2 {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(232,237,242,0.3);
+    }
+    .hero-name .accent { color: var(--accent); }
+
+    .hero-title {
+      font-size: 16px;
+      color: var(--muted);
+      margin: 20px 0 32px;
+      letter-spacing: 0.5px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-title strong { color: var(--text); }
+
+    .hero-desc {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 480px;
+      margin-bottom: 40px;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #000;
+      padding: 14px 32px;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: #00ffb3; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,229,160,0.3); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--text);
+      padding: 14px 32px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      font-size: 15px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* Hero Image Side */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-img-wrap {
+      position: relative;
+      width: 340px;
+      height: 420px;
+    }
+
+    .hero-img-frame {
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(0,229,160,0.15), rgba(0,102,255,0.1));
+      border: 1px solid rgba(0,229,160,0.2);
+      overflow: hidden;
+    }
+
+    .hero-img-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+
+    /* Placeholder when no image */
+    .img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0e1318, #111820);
+      color: var(--muted);
+      font-size: 14px;
+      gap: 12px;
+    }
+    .img-placeholder svg { opacity: 0.3; }
+
+    .hero-img-decoration {
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 100px;
+      height: 100px;
+      border: 1px solid rgba(0,229,160,0.15);
+      border-radius: 12px;
+      transform: rotate(12deg);
+    }
+    .hero-img-decoration2 {
+      position: absolute;
+      bottom: -16px;
+      left: -16px;
+      width: 70px;
+      height: 70px;
+      border: 1px solid rgba(0,102,255,0.2);
+      border-radius: 8px;
+      transform: rotate(-8deg);
+    }
+
+    /* Floating Tags */
+    .floating-tag {
+      position: absolute;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .floating-tag.tag-1 { top: 40px; right: -60px; animation: float1 4s ease-in-out infinite; }
+    .floating-tag.tag-2 { bottom: 80px; right: -40px; animation: float2 5s ease-in-out infinite; }
+    .floating-tag.tag-3 { bottom: 20px; left: -50px; animation: float1 4.5s ease-in-out infinite; }
+
+    @keyframes float1 { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+    @keyframes float2 { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(8px); } }
+
+    .tag-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: flex;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 60px;
+      gap: 0;
+    }
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      padding: 0 40px;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-number span { color: var(--accent); }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+    /* SKILLS SECTION */
+    .section {
+      padding: 100px 60px;
+      position: relative;
+    }
+
+    .section-label {
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.7;
+      margin-bottom: 64px;
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .skill-card {
+      background: var(--card);
+      padding: 40px 36px;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-card:hover { background: #141d26; }
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .skill-card:hover::before { opacity: 1; }
+
+    .skill-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .skill-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .skill-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 16px;
+    }
+    .skill-tag {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* SERVICES SECTION */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .service-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 32px;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card:hover {
+      border-color: rgba(0,229,160,0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,229,160,0.1);
+    }
+
+    .service-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--border);
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .service-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .service-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* WHY HIRE ME */
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .why-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .why-item {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .why-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      min-width: 28px;
+      padding-top: 2px;
+    }
+
+    .why-text h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .why-text p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .why-cta-box {
+      background: linear-gradient(135deg, rgba(0,229,160,0.08), rgba(0,102,255,0.05));
+      border: 1px solid rgba(0,229,160,0.15);
+      border-radius: 20px;
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    .why-cta-box h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .why-cta-box p {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    /* CONTACT */
+    .contact-section {
+      padding: 100px 60px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .contact-item:hover {
+      border-color: rgba(0,229,160,0.3);
+      transform: translateX(8px);
+    }
+    .contact-item-icon {
+      width: 40px; height: 40px;
+      background: rgba(0,229,160,0.08);
+      border: 1px solid rgba(0,229,160,0.15);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .contact-item-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .contact-item-value { font-size: 15px; font-weight: 400; }
+
+    /* Form */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: rgba(0,229,160,0.4);
+    }
+
+    .form-group textarea { height: 130px; }
+
+    .form-submit {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    .form-submit:hover { background: #00ffb3; transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 60px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+    }
+    footer .footer-logo span { color: var(--accent); }
+
+    footer p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; text-align: center; }
+      .hero-desc { margin: 0 auto 40px; }
+      .hero-actions { justify-content: center; flex-wrap: wrap; }
+      .hero-visual { display: none; }
+      .stats-bar { flex-wrap: wrap; gap: 0; padding: 40px 24px; }
+      .stat-item { flex: 1 1 50%; border-right: none; border-bottom: 1px solid var(--border); padding: 20px; }
+      .section { padding: 60px 24px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; gap: 40px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .contact-section { padding: 60px 24px; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 20px; text-align: center; padding: 40px 24px; }
+      .ai-capabilities { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Alamgir<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Hire Me →</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Available for Work</div>
+      <h1 class="hero-name">
+        Alamgir<br>
+        <span class="line2">Hossain</span>
+      </h1>
+      <p class="hero-title"><strong>Fullstack Developer</strong> — Web, Mobile & Custom Solutions</p>
+      <p class="hero-desc">
+        আমি এমন ডিজিটাল প্রোডাক্ট বানাই যা আপনার ব্যবসাকে এগিয়ে নিয়ে যায়। WordPress থেকে React, Shopify থেকে Android — সব কিছু এক জায়গায়।
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Start a Project →</a>
+        <a href="alamgir-resume.pdf" download class="btn-secondary">
+          ⬇ Resume Download
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-img-wrap">
+        <div class="hero-img-frame">
+          <img src="alamgir.png" alt="Alamgir Hossain"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="img-placeholder" style="display:none;">
+            <svg width="60" height="60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            <span>alamgir.png</span>
+          </div>
+        </div>
+        <div class="hero-img-decoration"></div>
+        <div class="hero-img-decoration2"></div>
+
+        <div class="floating-tag tag-1">
+          <span class="tag-dot" style="background:#00E5A0"></span>
+          React Developer
+        </div>
+        <div class="floating-tag tag-2">
+          🔌 Custom WP Plugin
+        </div>
+        <div class="floating-tag tag-3">
+          📱 Android Dev
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar reveal">
+    <div class="stat-item">
+      <div class="stat-number">5<span>+</span></div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">50<span>+</span></div>
+      <div class="stat-label">Projects Delivered</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">6</div>
+      <div class="stat-label">Core Technologies</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">100<span>%</span></div>
+      <div class="stat-label">Client Satisfaction</div>
+    </div>
+  </div>
+
+  <!-- SKILLS SECTION -->
+  <section class="section" id="skills">
+    <div class="section-label">Expertise</div>
+    <h2 class="section-title reveal">আমি যা করতে পারি</h2>
+    <p class="section-sub reveal">WordPress থেকে Shopify, React থেকে Android — প্রতিটি platform-এ আমার দক্ষতা আছে।</p>
+
+    <div class="skills-grid reveal">
+      <div class="skill-card">
+        <div class="skill-icon" style="background:rgba(255,100,50,0.1);">🎨</div>
+        <div class="skill-name">WordPress & Elementor</div>
+        <p class="skill-desc">Custom themes, plugin development, page builders — আপনার ব্যবসার জন্য একটি সুন্দর, দ্রুত WordPress সাইট।</p>
+        <div class="skill-tags">
+          <span class="skill-tag">Custom Theme</span>
+          <span class="skill-tag">Elementor Pro</span>
+          <span class="skill-tag">WooCommerce</span>
+          <span class="skill-tag">SEO</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon" style="background:rgba(150,255,100,0.1);">🛒</div>
+        <div class="skill-name">Shopify Development</div>
+        <p class="skill-desc">Custom Shopify store build, theme customization, app integration — আপনার e-commerce business শুরু করুন আজই।</p>
+        <div class="skill-tags">
+          <span class="skill-tag">Shopify Liquid</span>
+          <span class="skill-tag">Payment Gateway</span>
+          <span class="skill-tag">Conversion Opt.</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon" style="background:rgba(0,150,255,0.1);">⚛️</div>
+        <div class="skill-name">React Development</div>
+        <p class="skill-desc">Modern, fast, interactive web applications তৈরি করি React দিয়ে — API integration থেকে complex UI পর্যন্ত।</p>
+        <div class="skill-tags">
+          <span class="skill-tag">React.js</span>
+          <span class="skill-tag">Next.js</span>
+          <span class="skill-tag">REST API</span>
+          <span class="skill-tag">Tailwind</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon" style="background:rgba(100,255,200,0.1);">📱</div>
+        <div class="skill-name">Android App Development</div>
+        <p class="skill-desc">Native Android apps তৈরি করি যা আপনার users-দের একটি seamless mobile experience দেয়।</p>
+        <div class="skill-tags">
+          <span class="skill-tag">Kotlin / Java</span>
+          <span class="skill-tag">Firebase</span>
+          <span class="skill-tag">Play Store</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="section-label">What I Offer</div>
+    <h2 class="section-title reveal">Services</h2>
+    <p class="section-sub reveal">আমার সাথে কাজ করলে আপনি পাবেন একটি সম্পূর্ণ ডিজিটাল সমাধান।</p>
+
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div class="service-title">WordPress Website</div>
+        <p class="service-desc">Business website, portfolio, landing page — WordPress + Elementor দিয়ে professional design, fast performance এবং SEO-ready।</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div class="service-title">Custom WordPress Plugin</div>
+        <p class="service-desc">আপনার site-এর জন্য যা দরকার ঠিক সেটাই বানাই। Custom post type, dashboard widget, API connection — যেকোনো ধরনের WP plugin।</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <div class="service-title">Custom Web App</div>
+        <p class="service-desc">React দিয়ে পুরোপুরি custom web application — management system, dashboard, booking tool, inventory — আপনার ব্যবসার মতো করে।</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <div class="service-title">E-Commerce Store</div>
+        <p class="service-desc">Shopify বা WooCommerce দিয়ে আপনার online shop setup করি। Payment, inventory, shipping সব কিছু।</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">05</div>
+        <div class="service-title">Android App</div>
+        <p class="service-desc">আপনার business-এর জন্য Android app তৈরি করি। Simple থেকে complex — সব ধরনের app।</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">06</div>
+        <div class="service-title">Maintenance & Support</div>
+        <p class="service-desc">পুরনো site fix, speed optimization, security update — আপনার site সব সময় ঠিক রাখি।</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY HIRE ME -->
+  <section class="section" style="background: var(--surface); border-top:1px solid var(--border)">
+    <div class="why-grid reveal">
+      <div>
+        <div class="section-label">কেন আমাকে বেছে নেবেন</div>
+        <h2 class="section-title" style="margin-bottom:48px">আমার সাথে কাজ করলে <br>কী পাবেন?</h2>
+
+        <div class="why-list">
+          <div class="why-item">
+            <span class="why-num">01</span>
+            <div class="why-text">
+              <h4>সময়মতো Delivery</h4>
+              <p>Deadline miss করি না। আপনার project নির্ধারিত সময়ের মধ্যে deliver হবে।</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <span class="why-num">02</span>
+            <div class="why-text">
+              <h4>Clean & Scalable Code</h4>
+              <p>আমার code বুঝতে পারা যায়, maintain করা সহজ এবং ভবিষ্যতে বড় করা যায়।</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <span class="why-num">03</span>
+            <div class="why-text">
+              <h4>Custom Solution</h4>
+              <p>Template বা ready-made solution নয় — আপনার ব্যবসার জন্য একদম নিজস্ব কাস্টম তৈরি করি।</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <span class="why-num">04</span>
+            <div class="why-text">
+              <h4>সহজ যোগাযোগ</h4>
+              <p>কাজ চলাকালীন সব সময় update পাবেন। Bangla বা English — যেভাবে চান।</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="why-cta-box">
+        <h3>প্রজেক্ট শুরু করুন আজই</h3>
+        <p>একটি ছোট কথোপকথন বড় পরিবর্তন আনতে পারে। আপনার idea শেয়ার করুন।</p>
+        <a href="#contact" class="btn-primary" style="display:inline-flex; margin: 0 auto;">আলাপ করুন →</a>
+
+        <div style="margin-top:32px; padding-top:32px; border-top:1px solid var(--border); display:flex; justify-content:center; gap:24px; flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--accent)">24h</div>
+            <div style="font-size:12px;color:var(--muted)">Response Time</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--accent)">Free</div>
+            <div style="font-size:12px;color:var(--muted)">Consultation</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--accent)">৳BDT</div>
+            <div style="font-size:12px;color:var(--muted)">Local Rates</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <div class="contact-grid">
+      <div>
+        <div class="section-label">যোগাযোগ করুন</div>
+        <h2 class="section-title reveal">Let's Build<br>Something Great</h2>
+        <p style="font-size:16px; color:var(--muted); line-height:1.7; margin-top:16px;">
+          আপনার project idea নিয়ে কথা বলতে চাই। Call করুন, Email করুন, বা Facebook-এ message করুন।
+        </p>
+
+        <div class="contact-info">
+          <a href="tel:+8801717911704" class="contact-item">
+            <div class="contact-item-icon">📞</div>
+            <div>
+              <div class="contact-item-label">Phone / WhatsApp</div>
+              <div class="contact-item-value">01717-911704</div>
+            </div>
+          </a>
+          <a href="mailto:alamgir.dev@yahoo.com" class="contact-item">
+            <div class="contact-item-icon">✉️</div>
+            <div>
+              <div class="contact-item-label">Email</div>
+              <div class="contact-item-value">alamgir.dev@yahoo.com</div>
+            </div>
+          </a>
+          <a href="https://facebook.com/alamgir.rangpur" target="_blank" class="contact-item">
+            <div class="contact-item-icon">💬</div>
+            <div>
+              <div class="contact-item-label">Facebook</div>
+              <div class="contact-item-value">fb.com/alamgir.rangpur</div>
+            </div>
+          </a>
+          <div class="contact-item" style="cursor:default">
+            <div class="contact-item-icon">📍</div>
+            <div>
+              <div class="contact-item-label">Location</div>
+              <div class="contact-item-value">Kurigram, Rangpur, Bangladesh</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <form class="contact-form" id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>আপনার নাম</label>
+              <input type="text" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label>ফোন / Email</label>
+              <input type="text" placeholder="01XXXXXXXX" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>কী কাজ দরকার?</label>
+            <select style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 18px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;appearance:none;">
+              <option value="">Project type সিলেক্ট করুন</option>
+              <option>WordPress Website</option>
+              <option>Custom WordPress Plugin</option>
+              <option>Custom Web App (React)</option>
+              <option>Shopify Store</option>
+              <option>Android App</option>
+              <option>অন্য কিছু</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>বিস্তারিত লিখুন</label>
+            <textarea placeholder="আপনার project-এর ব্যাপারে বলুন..."></textarea>
+          </div>
+          <button type="button" class="form-submit" onclick="handleSubmit()">
+            Message পাঠান →
+          </button>
+          <div id="formMsg" style="display:none; text-align:center; padding:12px; border-radius:8px; font-size:14px;"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Alamgir<span>.</span></div>
+    <p>© 2025 Alamgir Hossain. Kurigram, Bangladesh.</p>
+    <div class="footer-links">
+      <a href="mailto:alamgir.dev@yahoo.com">Email</a>
+      <a href="https://facebook.com/alamgir.rangpur" target="_blank">Facebook</a>
+      <a href="tel:+8801717911704">Call</a>
+    </div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    function animRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    }
+    animRing();
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(2)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1.5)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1)';
+      });
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => obs.observe(r));
+
+    // Counter animation
+    function animateCounter(el, target, suffix='') {
+      let start = 0;
+      const duration = 1500;
+      const startTime = performance.now();
+      function update(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target) + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    const statsObs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        document.querySelectorAll('.stat-number').forEach(el => {
+          const text = el.textContent;
+          const num = parseInt(text);
+          const suffix = text.replace(/[0-9]/g, '');
+          el.innerHTML = '0';
+          animateCounter(el, num, `<span>${suffix}</span>`);
+        });
+        statsObs.disconnect();
+      }
+    }, { threshold: 0.5 });
+    statsObs.observe(document.querySelector('.stats-bar'));
+
+    // Form handler
+    function handleSubmit() {
+      const msg = document.getElementById('formMsg');
+      msg.style.display = 'block';
+      msg.style.background = 'rgba(0,229,160,0.08)';
+      msg.style.border = '1px solid rgba(0,229,160,0.2)';
+      msg.style.color = '#00E5A0';
+      msg.textContent = '✓ ধন্যবাদ! আমি শীঘ্রই আপনার সাথে যোগাযোগ করব।';
+    }
+  </script>
+
+</body>
+</html>
